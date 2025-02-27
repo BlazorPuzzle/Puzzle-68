@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.HttpOverrides;
 using Puzzle68.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,13 +22,13 @@ if (!app.Environment.IsDevelopment())
 	app.UseHsts();
 }
 
-var headerOptions = new ForwardedHeadersOptions
-{
-	ForwardedHeaders = ForwardedHeaders.All
-};
-headerOptions.KnownNetworks.Clear();
-headerOptions.KnownProxies.Clear();
-app.UseForwardedHeaders(headerOptions);
+//var headerOptions = new ForwardedHeadersOptions
+//{
+//	ForwardedHeaders = ForwardedHeaders.All
+//};
+//headerOptions.KnownNetworks.Clear();
+//headerOptions.KnownProxies.Clear();
+//app.UseForwardedHeaders(headerOptions);
 
 app.UseAntiforgery();
 app.UseHttpsRedirection();
