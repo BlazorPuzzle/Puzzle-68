@@ -1,0 +1,64 @@
+﻿@page "/"
+@inject IHttpContextAccessor HttpContextAccessor
+@rendermode @(new InteractiveServerRenderMode(false))
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome (@ipAddress) to your new app.
+
+<p>This is a blazer global server interactive application.  In this scenario,
+	we're grabbing your IP address using the HTTP headers and reporting it in the paragraph above</p>
+
+	<p>When we're running locally on our developer workstation, this correctly reports the local IP address. 
+		When we're running on Azure Container Apps or another hosted service the IP address doesn't match 
+		our public facing address.</p>
+
+		<p>how do we fix this? </p>
+
+<h3>HTTP Headers</h3>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Header</th>
+			<th>Value</th>
+		</tr>
+	</thead>
+	<tbody>
+	@foreach (var header in headers)
+	{
+		<tr>
+			<td>@header.Key</td>
+			<td>@header.Value</td>
+		</tr>
+	}
+	</tbody>
+</table>
+
+@code {
+
+	string ipAddress = string.Empty;
+	Dictionary<string, string> headers = new();
+
+
+	protected override void OnInitialized()
+	{
+		ipAddress = HttpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.MapToIPv4().ToString() ?? "Unknown";
+
+		// inspect the HttpHeaders and add them to a collection to display
+		// in the UI
+		var httpHeader = HttpContextAccessor.HttpContext?.Request?.Headers;
+		if (httpHeader != null)
+		{
+			foreach (var header in httpHeader)
+			{
+				headers.Add(header.Key, header.Value.ToString());
+			}
+		}		
+		
+		base.OnInitialized();
+	}
+
+
+}
